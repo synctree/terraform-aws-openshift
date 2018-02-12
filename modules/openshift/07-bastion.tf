@@ -5,7 +5,7 @@ resource "aws_instance" "bastion" {
   instance_type        = "t2.micro"
   subnet_id            = "${aws_subnet.public-subnet.id}"
 
-  security_groups = [
+  vpc_security_group_ids = [
     "${aws_security_group.openshift-vpc.id}",
     "${aws_security_group.openshift-ssh.id}",
     "${aws_security_group.openshift-public-egress.id}",
