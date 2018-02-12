@@ -1,5 +1,5 @@
 data "template_file" "inventory" {
-  template = "${file("${path.cwd}/inventory.template.cfg")}"
+  template = "${file("${path.module}/files/inventory.template.cfg")}"
   vars {
     access_key = "${aws_iam_access_key.openshift-aws-user.id}"
     secret_key = "${aws_iam_access_key.openshift-aws-user.secret}"
