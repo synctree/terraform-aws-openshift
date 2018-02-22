@@ -7,8 +7,9 @@ resource "aws_key_pair" "keypair" {
 //  Create the master userdata script.
 data "template_file" "setup-master" {
   template = "${file("${path.module}/files/setup-master.sh")}"
-
-  //  Currently, no vars needed.
+  vars {
+    availability_zone = "${lookup(var.subnetaz, var.region)}"
+  }
 }
 
 //  Launch configuration for the consul cluster auto-scaling group.
@@ -29,6 +30,7 @@ resource "aws_instance" "master" {
   //  We need at least 30GB for OpenShift, let's be greedy...
   root_block_device {
     volume_size = 50
+    volume_type = "gp2"
   }
 
   # Storage for Docker, see:
@@ -36,6 +38,7 @@ resource "aws_instance" "master" {
   ebs_block_device {
     device_name = "/dev/sdf"
     volume_size = 80
+    volume_type = "gp2"
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
@@ -43,14 +46,18 @@ resource "aws_instance" "master" {
   tags {
     Name    = "OpenShift Master"
     Project = "openshift"
+    // this tag is required for dynamic EBS PVCs
+    // see https://github.com/kubernetes/kubernetes/issues/39178
+    KubernetesCluster = "openshift-${var.region}"
   }
 }
 
 //  Create the node userdata script.
 data "template_file" "setup-node" {
   template = "${file("${path.module}/files/setup-node.sh")}"
-
-  //  Currently, no vars needed.
+  vars {
+    availability_zone = "${lookup(var.subnetaz, var.region)}"
+  }
 }
 
 //  Create the two nodes. This would be better as a Launch Configuration and
@@ -71,6 +78,7 @@ resource "aws_instance" "node1" {
   //  We need at least 30GB for OpenShift, let's be greedy...
   root_block_device {
     volume_size = 50
+    volume_type = "gp2"
   }
 
   # Storage for Docker, see:
@@ -78,6 +86,7 @@ resource "aws_instance" "node1" {
   ebs_block_device {
     device_name = "/dev/sdf"
     volume_size = 80
+    volume_type = "gp2"
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
@@ -85,6 +94,7 @@ resource "aws_instance" "node1" {
   tags {
     Name    = "OpenShift Node 1"
     Project = "openshift"
+    KubernetesCluster = "openshift-${var.region}"
   }
 }
 resource "aws_instance" "node2" {
@@ -103,6 +113,7 @@ resource "aws_instance" "node2" {
   //  We need at least 30GB for OpenShift, let's be greedy...
   root_block_device {
     volume_size = 50
+    volume_type = "gp2"
   }
 
   # Storage for Docker, see:
@@ -110,6 +121,7 @@ resource "aws_instance" "node2" {
   ebs_block_device {
     device_name = "/dev/sdf"
     volume_size = 80
+    volume_type = "gp2"
   }
 
   key_name = "${aws_key_pair.keypair.key_name}"
@@ -117,5 +129,6 @@ resource "aws_instance" "node2" {
   tags {
     Name    = "OpenShift Node 2"
     Project = "openshift"
+    KubernetesCluster = "openshift-${var.region}"
   }
 }
