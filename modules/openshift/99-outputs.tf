@@ -1,4 +1,7 @@
 //  Output some useful variables for quick SSH access etc.
+output "master-instance-ids" {
+  value = ["${aws_instance.master.id}"]
+}
 output "master-public_dns" {
   value = "${aws_instance.master.public_dns}"
 }
