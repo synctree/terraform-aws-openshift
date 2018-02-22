@@ -2,6 +2,11 @@
 output "master-instance-ids" {
   value = ["${aws_instance.master.id}"]
 }
+
+output "vpc-id" {
+  value = "aws_vpc.openshift.id"
+}
+
 output "master-public_dns" {
   value = "${aws_instance.master.public_dns}"
 }
