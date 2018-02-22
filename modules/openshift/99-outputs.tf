@@ -4,7 +4,7 @@ output "master-instance-ids" {
 }
 
 output "vpc-subnets" {
-  value = "aws_subnet.public-subnet.id"
+  value = ["aws_subnet.public-subnet.id"]
 }
 
 output "master-public_dns" {
