@@ -26,3 +26,8 @@ variable "key_name" {
 variable "public_key_path" {
   description = "The local public key path, e.g. ~/.ssh/id_rsa.pub"
 }
+
+variable "custom_public_hostname" {
+  default     = ""
+  description = "A custom public hostname to use for the master e.g. openshift.example.com"
+}
