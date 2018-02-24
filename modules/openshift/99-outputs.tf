@@ -1,10 +1,12 @@
 //  Output some useful variables for quick SSH access etc.
-output "master-instance-ids" {
-  value = ["${aws_instance.master.id}"]
+output "vpc-id" {
+  value = "${aws_vpc.openshift.id}"
 }
-
 output "vpc-subnets" {
   value = ["${aws_subnet.public-subnet.id}"]
+}
+output "master-instance-id" {
+  value = "${aws_instance.master.id}"
 }
 
 output "master-public_dns" {
