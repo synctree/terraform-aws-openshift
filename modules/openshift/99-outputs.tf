@@ -5,8 +5,12 @@ output "vpc-id" {
 output "vpc-subnets" {
   value = ["${aws_subnet.public-subnet.id}"]
 }
-output "master-instance-id" {
-  value = "${aws_instance.master.id}"
+output "node-instance-ids" {
+  value = [
+    "${aws_instance.master.id}",
+    "${aws_instance.node1.id}",
+    "${aws_instance.node2.id}"
+  ]
 }
 
 output "master-public_dns" {
